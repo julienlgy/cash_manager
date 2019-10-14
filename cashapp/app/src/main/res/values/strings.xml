@@ -13,4 +13,8 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+    <string name="title_activity_cash">CashActivity</string>
+    <string name="title_home">CashManager</string>
+    <string name="title_dashboard">Shopping list</string>
+    <string name="title_notifications">Payment</string>
 </resources>

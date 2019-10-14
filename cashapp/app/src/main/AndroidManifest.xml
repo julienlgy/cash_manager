@@ -13,9 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".CashActivity"
+            android:label="@string/title_activity_cash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
