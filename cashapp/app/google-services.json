@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "108851602249",
+    "firebase_url": "https://cashmanager-wa.firebaseio.com",
+    "project_id": "cashmanager-wa",
+    "storage_bucket": "cashmanager-wa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:108851602249:android:df98d796e13163670a3098",
+        "android_client_info": {
+          "package_name": "com.example.cashapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "108851602249-5e60lp9u090ebh47dmfhk1ga202gfvhi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeAH3BQqimdZIgyMboAdlYpvWddK-WlW0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "108851602249-5e60lp9u090ebh47dmfhk1ga202gfvhi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:108851602249:android:6741dbfc7c0b3b970a3098",
+        "android_client_info": {
+          "package_name": "com.example.cashmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "108851602249-5e60lp9u090ebh47dmfhk1ga202gfvhi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeAH3BQqimdZIgyMboAdlYpvWddK-WlW0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "108851602249-5e60lp9u090ebh47dmfhk1ga202gfvhi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

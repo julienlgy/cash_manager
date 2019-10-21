@@ -30,8 +30,7 @@ class CashActivity : AppCompatActivity() {
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_payment
             )
         )
-        //navView[1].isEnabled = false
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        //setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
         // TEST - Dynamic Layout
