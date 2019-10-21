@@ -17,4 +17,15 @@
     <string name="title_home">CashManager</string>
     <string name="title_dashboard">Shopping list</string>
     <string name="title_notifications">Payment</string>
+
+    <string name="title_activity_modal_main">modalMain</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="enter_id">Product id. (click to enter manually)</string>
+    <string name="product_info_empty">No product selected. Start scanning or enter the ID manually</string>
+    <!-- GOLBAL -->
+    <string name="appname">CashManager</string>
+    <!-- HOME FRAGMENT STRINGS -->
+    <string name="home_empty_list">Your list is empty</string>
+    <string name="home_empty_list_button">Start scanning</string>
 </resources>
