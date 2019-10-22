@@ -34,9 +34,9 @@ class CashActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         // TEST - Dynamic Layout
-        /*var textView = TextView(this)
+        var textView = TextView(this)
         textView.setText("Article ")
-        R.layout.fragment_dashboard.*/
+        R.layout.fragment_article.
         // TEST - MVC
         /*var mCart = CartController.getInstance()
         var myArticle = Article(0,"Pates", "Pates Italiennes", "", 2.02f)
