@@ -6,20 +6,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.LinearLayout
 import android.widget.ListView
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.cashapp.R
 import com.example.cashapp.ScannerActivity
+import com.example.cashapp.controller.ArticleAdapter
+import com.example.cashapp.controller.CartController
+import com.example.cashapp.model.Article
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.fragment_home.*
+
+
 
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
-    private lateinit var listView : ListView
+    private lateinit var listArticle : RecyclerView
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,27 +35,49 @@ class HomeFragment : Fragment() {
         homeViewModel =
             ViewModelProviders.of(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val layout_no_product : ConstraintLayout = root.findViewById(R.id.layout_no_products)
-        val layout_product: ConstraintLayout = root.findViewById(R.id.layout_product)
-        layout_product.visibility = View.INVISIBLE
-        layout_no_product.visibility = View.VISIBLE
         val addbutton : FloatingActionButton = root.findViewById(R.id.addfloat);
         addbutton.setOnClickListener{
             val intent = Intent(context, ScannerActivity::class.java);
-            startActivity(intent);
+            startActivityForResult(intent, ScannerActivity.REQUEST_CODE);
         };
-
-        /*listView = root.findViewById<ListView>(R.id.recipe_list_view)
-        val exampleList = arrayOfNulls<String>(5)
-        exampleList[0] = "salut"
-        exampleList[1] = "cava ?"
-        exampleList[2] = "et toi ?"
-        exampleList[3] ="Moi super"
-        exampleList[4] = "Cool."
-
-        val adapter = ArrayAdapter(this.requireContext(), R.layout.article, exampleList)
-        listView.adapter = adapter*/
-
+        this.listArticle = root.findViewById(R.id.list_article)
         return root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // toggling the correct layout.
+        //getCart().add(Article(0, "test produit", "ceci est un test produit", "https://www.delcourt.fr/3073-large_default/Produit-nettoyant-vitres-DELCOURT-pro.jpg", "15.25".toFloat()))
+        //getCart().add(Article(0, "test produit", "ceci est un test produit", "https://www.delcourt.fr/3073-large_default/Produit-nettoyant-vitres-DELCOURT-pro.jpg", "15.25".toFloat()))
+        this.listArticle
+        val adapter = ArticleAdapter(this.requireContext(), getCart().getAll())
+        listArticle.layoutManager = adapter.getLayoutManager()
+        listArticle.adapter = adapter
+        //val adapter = ArrayAdapter(this.requireContext(), R.layout.article, R.id.art_id, getCart().getAll())
+        //listView.adapter = adapter
+        toggleLayout(getCart().size() !== 0)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        println("RESULT CALLED")
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == ScannerActivity.REQUEST_CODE) {
+            if (resultCode == 0 && data is Intent) {
+                println("RESULT OK")
+                val str = data.getStringExtra("article")
+                getCart().add(Article.parse(str))
+                println(str)
+            }
+        }
+    }
+
+
+    fun getCart() : CartController {
+        return CartController.getInstance()
+    }
+
+    fun toggleLayout(on : Boolean) {
+        layout_product.visibility = if (on) View.VISIBLE else View.INVISIBLE
+        layout_no_products.visibility = if (!on) View.VISIBLE else View.INVISIBLE
     }
 }

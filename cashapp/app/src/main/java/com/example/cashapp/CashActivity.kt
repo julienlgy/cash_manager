@@ -33,18 +33,5 @@ class CashActivity : AppCompatActivity() {
         //setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        // TEST - Dynamic Layout
-        var textView = TextView(this)
-        textView.setText("Article ")
-        R.layout.fragment_article.
-        // TEST - MVC
-        /*var mCart = CartController.getInstance()
-        var myArticle = Article(0,"Pates", "Pates Italiennes", "", 2.02f)
-
-        mCart.addArticle(myArticle)
-        Log.d("REQUEST", mCart.getArticleInList(0))
-        mCart.removeArticle(0)
-        Log.d("REQUEST", mCart.getArticleInList(0))*/
-
     }
 }

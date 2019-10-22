@@ -1,5 +1,6 @@
 package com.example.cashapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.TextureView
@@ -7,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import com.example.cashapp.controller.CameraController
+import com.example.cashapp.model.Article
 import com.example.cashapp.ui.scanner.ScannerFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -16,8 +18,15 @@ import com.google.android.material.snackbar.Snackbar
  * last modified : 22/10/2019
  */
 class ScannerActivity : AppCompatActivity() {
+
+    companion object {
+        val REQUEST_CODE = 1
+    }
+
     private lateinit var okbutton : FloatingActionButton
     private lateinit var kobutton : FloatingActionButton
+    private lateinit var article : Article
+
     private lateinit var camera : CameraController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,12 +50,19 @@ class ScannerActivity : AppCompatActivity() {
             Snackbar.make(kobutton, R.string.scan_not_valid, Snackbar.LENGTH_SHORT)
                 .show();
         })
+        okbutton.setOnClickListener({
+            val resultIntent = Intent()
+            resultIntent.putExtra("article", Article.stringify(article));
+            setResult(0, resultIntent)
+            finish()
+        })
 
         camera.start()
         camera.result {
             val product_id : TextView = findViewById(R.id.product_id)
             val product_desc : TextView = findViewById(R.id.product_desc)
             product_id.text = it;
+            article = Article(it!!,"test article","Ceci est un test", "noimg", "10.25".toFloat())
             product_desc.text = "Produit trouvé mais aucune information disponible..., désoley"
             setValid(true)
         }
