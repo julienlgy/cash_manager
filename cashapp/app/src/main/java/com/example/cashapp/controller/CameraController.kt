@@ -17,7 +17,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.example.cashapp.model.Scanner
+import com.google.android.gms.tasks.Tasks.await
+import kotlinx.coroutines.*
 import org.w3c.dom.Text
+import kotlin.concurrent.thread
 
 
 /**
@@ -31,39 +34,45 @@ class CameraController {
     private val viewFinder : TextureView
     private val lifecycle : LifecycleOwner
 
+    private var analyser : Scanner?
+
     constructor(activity : Activity, lifecycle : LifecycleOwner, view : TextureView) {
         this.context = activity.applicationContext
         this.activity = activity
         this.viewFinder = view
         this.lifecycle = lifecycle
+        this.analyser = null
         if (allPermissionsGranted()) {
-            return;
+            return
         } else {
             ActivityCompat.requestPermissions(this.activity, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
     }
 
-    fun start() : Boolean {
-        viewFinder.post { startCamera() }
-        return allPermissionsGranted();
+    fun start() : CameraController {
+        val analyzerUseCase = createAnalyzer()
+        viewFinder.post { startCamera(analyzerUseCase) }
+        return this
+    }
+
+    fun result(callback : (String?) -> Unit) {
+        if (analyser != null) {
+            //thread(start = true) {
+                println("new runablle")
+                (analyser as Scanner).waitForResult({
+                    callback(it)
+                })
+            //}
+        } else {
+            println("ANALYZER SET TO NULL...")
+        }
     }
 
 
     /**
      * PRIVATE FUNCTIONS
      */
-    private fun startCamera() {
-        val previewConfig = PreviewConfig.Builder().apply {
-            setTargetAspectRatio(Rational(1, 1))
-            setTargetResolution(Size(640, 640))
-        }.build()
-        val preview = Preview(previewConfig)
-
-        preview.setOnPreviewOutputUpdateListener {
-            viewFinder.surfaceTexture = it.surfaceTexture
-            updateTransform()
-        }
-
+    private fun createAnalyzer() : ImageAnalysis {
         val analyzerConfig = ImageAnalysisConfig.Builder().apply {
             val analyzerThread = HandlerThread(
                 "ScannerController"
@@ -76,6 +85,22 @@ class CameraController {
 
         val analyzerUseCase = ImageAnalysis(analyzerConfig).apply {
             analyzer = Scanner()
+        }
+        println("ANALYZER CURRENTLY SET")
+        this.analyser = analyzerUseCase.analyzer as Scanner
+        return analyzerUseCase
+    }
+
+    private fun startCamera(analyzerUseCase : ImageAnalysis) {
+        val previewConfig = PreviewConfig.Builder().apply {
+            setTargetAspectRatio(Rational(1, 1))
+            setTargetResolution(Size(640, 640))
+        }.build()
+        val preview = Preview(previewConfig)
+
+        preview.setOnPreviewOutputUpdateListener {
+            viewFinder.surfaceTexture = it.surfaceTexture
+            updateTransform()
         }
 
         // Bind use cases to lifecycle

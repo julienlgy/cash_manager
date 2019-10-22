@@ -28,4 +28,6 @@
     <!-- HOME FRAGMENT STRINGS -->
     <string name="home_empty_list">Your list is empty</string>
     <string name="home_empty_list_button">Start scanning</string>
+    <!-- SCANNING STRINGS -->
+    <string name="scan_not_valid">Can\'t validate empty article</string>
 </resources>
