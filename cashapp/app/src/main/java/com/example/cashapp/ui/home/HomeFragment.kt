@@ -5,13 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.LinearLayout
-import android.widget.ListView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cashapp.R
 import com.example.cashapp.ScannerActivity
@@ -47,8 +42,8 @@ class HomeFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         // toggling the correct layout.
-        //getCart().add(Article(0, "test produit", "ceci est un test produit", "https://www.delcourt.fr/3073-large_default/Produit-nettoyant-vitres-DELCOURT-pro.jpg", "15.25".toFloat()))
-        //getCart().add(Article(0, "test produit", "ceci est un test produit", "https://www.delcourt.fr/3073-large_default/Produit-nettoyant-vitres-DELCOURT-pro.jpg", "15.25".toFloat()))
+        //getCart().add(Article("0", "test produit", "ceci est un test produit", "https://www.delcourt.fr/3073-large_default/Produit-nettoyant-vitres-DELCOURT-pro.jpg", "15.25".toFloat()))
+        //getCart().add(Article("045616516", "test produit", "ceci est un test produit", "https://www.delcourt.fr/3073-large_default/Produit-nettoyant-vitres-DELCOURT-pro.jpg", "15.25".toFloat()))
         this.listArticle
         val adapter = ArticleAdapter(this.requireContext(), getCart().getAll())
         listArticle.layoutManager = adapter.getLayoutManager()
@@ -77,7 +72,7 @@ class HomeFragment : Fragment() {
     }
 
     fun toggleLayout(on : Boolean) {
-        layout_product.visibility = if (on) View.VISIBLE else View.INVISIBLE
+        view_product.visibility = if (on) View.VISIBLE else View.INVISIBLE
         layout_no_products.visibility = if (!on) View.VISIBLE else View.INVISIBLE
     }
 }

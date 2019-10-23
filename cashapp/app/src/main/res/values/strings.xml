@@ -25,9 +25,20 @@
     <string name="product_info_empty">No product selected. Start scanning or enter the ID manually</string>
     <!-- GOLBAL -->
     <string name="appname">CashManager</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="warning">Warning</string>
     <!-- HOME FRAGMENT STRINGS -->
     <string name="home_empty_list">Your list is empty</string>
     <string name="home_empty_list_button">Start scanning</string>
     <!-- SCANNING STRINGS -->
     <string name="scan_not_valid">Can\'t validate empty article</string>
+    <!-- PAYMENT STRINGS -->
+    <string name="payment_snackbar">You are entering payment area, for security reason you can\'t update Cart anymore</string>
+    <string name="cancel">Cancel</string>
+    <string name="cancel_confirm">Are you sure you wan\'t to cancel ?</string>
+    <!-- ARTICLE STRINGS -->
+    <string name="moins">Less</string>
+    <string name="plus">More</string>
+    <string name="delete">Delete</string>
 </resources>

@@ -2,12 +2,14 @@ package com.example.cashapp.controller
 
 import com.example.cashapp.model.Article
 
+/**
+ * CartController
+ * Jean Bosc x Julien Legay
+ * EPITECH 2019
+ */
 class CartController () {
 
-    private val mArticles: MutableList<Article> = mutableListOf()
-
-    init {}
-
+    // STATIC METHODS
     companion object {
 
         private var instance: CartController? = null
@@ -22,40 +24,91 @@ class CartController () {
 
     }
 
+    // PRIVATE VALUES
+    private val mArticles: MutableList<Article> = mutableListOf()
+    private val updateListener : MutableList<CartUpdated>
+    private var isOpened : Boolean = true
+
+    init {
+        updateListener = mutableListOf()
+    }
+
     fun add(article: Article) {
         mArticles.add(article)
+        notifyAdd()
     }
 
     fun remove(mId: String): Boolean {
-        for (mArticle in mArticles) {
-
+        for (mArticle in mArticles)
             if (mArticle.id == mId) {
                 mArticles.remove(mArticle)
+                notifyAdd()
                 return true
             }
-        }
-
         return false
     }
 
-    fun get(mId: String): String {
-        var mNom = ""
+    fun get(mId: String): Article? {
+        for (mArticle in mArticles)
+            if (mArticle.id === mId)
+                return mArticle
+        return null
+    }
 
-        for (mArticle in mArticles) {
+    fun getAll() : MutableList<Article> { return mArticles }
+    fun size() : Int {  return mArticles.size }
 
-            /*if (mArticle.id == mId) {
-                mNom = mArticles[mId.].nom
-            }*/
+    fun getPrice() : Float {
+        //
+        return "0.0".toFloat()
+    }
+
+    fun close() : Boolean {
+        if (!isOpened) return false
+        isOpened = false
+        notifyClose()
+        return true
+    }
+
+    fun open() : Boolean {
+        if (isOpened) return false
+        isOpened = true
+        notifyOpen()
+        return true
+    }
+    fun flush() : Boolean {
+        mArticles.removeAll(mArticles)
+        return open()
+    }
+
+    /**
+     * Listeners management
+     */
+    fun addListener(toAdd : CartUpdated) {
+        updateListener.add(toAdd)
+    }
+    fun notifyAdd() {
+        for(listen in updateListener) {
+            listen.onCartUpdate()
         }
-
-        return mNom
     }
-
-    fun getAll() : MutableList<Article> {
-        return mArticles
+    fun notifyClose() {
+        for(listen in updateListener) {
+            listen.onCartValidation()
+        }
     }
-
-    fun size() : Int {
-        return mArticles.size
+    fun notifyOpen() {
+        for(listen in updateListener) {
+            listen.onCartReopen()
+        }
     }
+}
+
+/**
+ * CartUpdated # Jlegay 2019
+ */
+interface CartUpdated {
+    fun onCartUpdate()
+    fun onCartValidation()
+    fun onCartReopen()
 }

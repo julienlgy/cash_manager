@@ -10,8 +10,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
-import android.graphics.BitmapFactory
-import java.net.URL
+import android.widget.ImageButton
+import android.widget.PopupMenu
 
 
 class ArticleAdapter: RecyclerView.Adapter<ArticleAdapter.ViewHolder>{
@@ -31,25 +31,37 @@ class ArticleAdapter: RecyclerView.Adapter<ArticleAdapter.ViewHolder>{
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val article = articleList.get(position)
-        holder.id.text = article.id
+        //holder.id.text = article.id
         holder.nom.text = article.nom
         holder.price.text = article.prix.toString()
-        //holder.img.setImageBitmap(bmp)
+        article.DownloadImageTask(holder.img).execute(article.img)
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val id: TextView
+        //val id: TextView
         val nom: TextView
         val img : ImageView
         //var thumbnail: ImageView
         val price: TextView
+        val editButton : ImageButton
 
         init {
-            id = view.findViewById(R.id.art_id)
+            //id = view.findViewById(R.id.art_id)
             nom = view.findViewById(R.id.art_nom)
             img = view.findViewById(R.id.art_img)
             //thumbnail = view.findViewById(R.id.thumbnail) as ImageView
             price = view.findViewById(R.id.art_prix)
+            editButton = view.findViewById(R.id.edit)
+            editButton.setOnClickListener({
+                if (it is View) showMenu(it)
+            })
+        }
+
+        fun showMenu(anchor: View): Boolean {
+            val popup = PopupMenu(anchor.context, anchor)
+            popup.getMenuInflater().inflate(R.menu.art_edit, popup.getMenu())
+            popup.show()
+            return true
         }
     }
 
