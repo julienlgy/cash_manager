@@ -25,6 +25,7 @@ public class SocketController {
     boolean add(Client client) {
         if (get(client.getSessionId()) == null) {
             arrayOfClient.add(client);
+            client.listen();
             return true;
         }
         return false;

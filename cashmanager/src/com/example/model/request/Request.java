@@ -13,14 +13,18 @@ public interface Request {
         COMMAND,
         HELLO,
         PASSWORD,
+        PING,
+        NULL,
         PAYMENT
     }
     static REQUEST getRequestType(String type) throws BadRequestException {
+        type = type.toUpperCase();
         switch(type) {
             case "COMMAND" : return REQUEST.COMMAND;
             case "HELLO" : return REQUEST.HELLO;
             case "PASSWORD" : return REQUEST.PASSWORD;
             case "PAYMENT" : return REQUEST.PAYMENT;
+            case "PING" : return REQUEST.PING;
             default : throw new BadRequestException(type);
         }
     }
@@ -28,4 +32,5 @@ public interface Request {
     REQUEST getType();
 
     Response.RESPONSE getDefaultResponse();
+    boolean needAction();
 }

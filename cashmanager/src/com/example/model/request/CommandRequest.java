@@ -30,4 +30,9 @@ public class CommandRequest implements Request {
     public Response.RESPONSE getDefaultResponse() {
         return Response.RESPONSE.BOOLEAN;
     }
+
+    @Override
+    public boolean needAction() {
+        return true;
+    }
 }

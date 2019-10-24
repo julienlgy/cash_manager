@@ -24,4 +24,9 @@ public class HelloRequest implements Request {
     public Response.RESPONSE getDefaultResponse() {
         return Response.RESPONSE.REQ_PASSWD;
     }
+
+    @Override
+    public boolean needAction() {
+        return false;
+    }
 }

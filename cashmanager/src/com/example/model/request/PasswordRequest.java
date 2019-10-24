@@ -22,4 +22,9 @@ public class PasswordRequest implements Request {
     public String getPassword() {
         return password;
     }
+
+    @Override
+    public boolean needAction() {
+        return false;
+    }
 }

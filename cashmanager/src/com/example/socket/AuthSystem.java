@@ -1,6 +1,7 @@
 package com.example.socket;
 
 import com.example.exception.BadRequestException;
+import com.example.exception.NullRequestException;
 import com.example.factory.RequestFactory;
 import com.example.factory.ResponseFactory;
 import com.example.model.Client;
@@ -55,7 +56,10 @@ public class AuthSystem implements Runnable {
                     out.writeBytes(res.getResponse());
                 else {
                     res.RESPONSE = false;
-                    out.writeBytes(res.getResponse());
+                    out.writeBytes("User already logged\n");
+                    user.close();
+                    out.close();
+                    in.close();
                 }
             } else {
                 res.RESPONSE = false;
@@ -92,6 +96,12 @@ public class AuthSystem implements Runnable {
                 }
             } catch (Exception u) {
                 System.out.println(u.getMessage());
+            }
+        } catch(NullRequestException n) {
+            try {
+                user.close();
+            } catch(Exception i) {
+
             }
         } catch(Exception e) {
             System.out.println(e.getMessage());
