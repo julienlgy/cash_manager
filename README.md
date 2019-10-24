@@ -6,7 +6,7 @@ Epitech project MsC 1
 Simple kotlin written android app, contains scanning, TCP client, live updated cart and more...  
  
   
-## cashmanager  
+## cashmanager  
 TCP server in JAVA. Handle payment process and features.
  
  
