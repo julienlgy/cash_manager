@@ -2,7 +2,18 @@ package com.example.factory;
 
 import com.example.model.Article;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.Socket;
+import java.net.URL;
+import java.nio.Buffer;
 import java.util.Random;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * jlegay 2019
@@ -10,18 +21,45 @@ import java.util.Random;
  * /!\ due to the difficulty to find the price by a barcode, the price is randomized by the id.
  */
 public class ArticleGetter {
-    private static String API = "https://apiurl.com/api/{{id}}.json";
-    public static Article getArticleById(String articleId) {
+    //private static String API = "https://apiurl.com/api/{{id}}.json";
+    private static String API = "https://fr.openfoodfacts.org/api/v0/product/{{id}}.json";
+
+    public static Article getArticleById(String articleId) throws IOException, JSONException {
         String urlToCall = API.replace("{{id}}", articleId);
-        // Api call.
+
+        URL obj = new URL(urlToCall);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+        int responseCode = con.getResponseCode();
+
+        System.out.println("\nSending 'GET' request to URL : " + urlToCall);
+        System.out.print("Response Code : " + responseCode);
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        System.out.println(response.toString());
+
+        JSONObject myResponse = new JSONObject(response.toString());
+        JSONObject myProduct = new JSONObject(myResponse.getString("product"));
+        /*System.out.println(myProduct.getString("product_name"));
+        System.out.println(myProduct.getString("image_nutrition_url"));*/
+
         return new Article(
                 articleId,
-                "Article non trouvé",
-                "Cet article n'a pas forcément de description",
-                "noimg",
+                myProduct.getString("product_name"),
+                "",
+                myProduct.getString("image_nutrition_url"),
                 randomizePrice(articleId)
         );
     }
+
     public static Float randomizePrice(String articleId) {
         Random random = new Random();
         random.setSeed(Long.parseLong(articleId));
