@@ -9,7 +9,7 @@ public class CommandRequest implements Request {
 
     public CommandRequest(String command, String args) {
         this.type = REQUEST.COMMAND;
-        this.command = command;
+        this.command = command.toUpperCase();
         this.args = args;
     }
 
@@ -20,6 +20,8 @@ public class CommandRequest implements Request {
     public String getArgs() {
         return args;
     }
+
+    public String getCommand() { return command; }
 
     @Override
     public REQUEST getType() {

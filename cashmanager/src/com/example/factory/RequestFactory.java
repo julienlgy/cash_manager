@@ -12,7 +12,7 @@ public abstract class RequestFactory {
         if (type == Request.REQUEST.HELLO && splittedBuffer[1].equals("FROM")) {
             return new HelloRequest(splittedBuffer[2]);
         } else if (type == Request.REQUEST.COMMAND) {
-            if (splittedBuffer[2] == "WITH")
+            if (splittedBuffer[2].equals("WITH"))
                 return new CommandRequest(splittedBuffer[1], splittedBuffer[3]);
             else
                 return new CommandRequest(splittedBuffer[1], null);

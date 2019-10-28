@@ -5,7 +5,10 @@ import com.example.exception.NullRequestException;
 import com.example.factory.RequestFactory;
 import com.example.factory.ResponseFactory;
 import com.example.model.Client;
+import com.example.model.request.CommandRequest;
 import com.example.model.request.Request;
+import com.example.model.response.ArticleResponse;
+import com.example.model.response.BooleanResponse;
 import com.example.model.response.DefaultResponse;
 import com.example.model.response.Response;
 
@@ -29,17 +32,37 @@ public class ClientSocketHandler implements Runnable {
                 if (!req.needAction()) {
                     Response res = ResponseFactory.create(req.getDefaultResponse());
                     out.writeBytes(res.getResponse());
+                } else {
+                    if (req.getType() == Request.REQUEST.COMMAND) {
+                        Response res = commandHandler(((CommandRequest) req));
+                        out.writeBytes(res.getResponse());
+                    }
                 }
             } catch (BadRequestException e) {
                 out.writeBytes(new DefaultResponse().getResponse());
             } catch (NullRequestException n) {
-                // need to globalize the close
+                /* TODO  globalize the close statement */
                 c.getSocket().close();
                 in.close();
                 out.close();
                 break;
             }
         }
+    }
+
+    Response commandHandler(CommandRequest req) {
+        BooleanResponse res = new BooleanResponse(false);
+        switch(req.getCommand()) {
+            case "ADD_ART":
+                res.RESPONSE = c.getCart().add_art(req.getArgs());
+                break;
+            case "REM_ART":
+                res.RESPONSE = c.getCart().rem_art(req.getArgs());
+                break;
+            case "GET_ART":
+                return new ArticleResponse(c.getCart().get_art(req.getArgs()));
+        }
+        return res;
     }
 
     @Override

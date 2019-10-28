@@ -33,6 +33,7 @@ public class AuthSystem implements Runnable {
     }
 
     public void connect(Socket user) throws Exception {
+        System.out.println("AUTHSYSTEM | Populate anonymous token for connection.");
         BufferedReader inFromClient =
                 new BufferedReader(new InputStreamReader(user.getInputStream()));
         DataOutputStream outToClient = new DataOutputStream(user.getOutputStream());
@@ -53,6 +54,7 @@ public class AuthSystem implements Runnable {
             if (this.serverPassword.equals(((PasswordRequest) req).getPassword())) {
                 res.RESPONSE = true;
                 if (this.socketController.add(new Client(sesssionId, user)))
+                    System.out.println("AUTHSYSTEM | Auth success. Welcome "+sesssionId);
                     out.writeBytes(res.getResponse());
                 else {
                     res.RESPONSE = false;
@@ -62,9 +64,10 @@ public class AuthSystem implements Runnable {
                     in.close();
                 }
             } else {
+                System.out.println("AUTHSYSTEM | Auth failed");
                 res.RESPONSE = false;
                 out.writeBytes(res.getResponse());
-                if (attemps == 3) {
+                if (attemps == 2) {
                     out.writeBytes("AUTH FAILED\n");
                     out.close();
                     in.close();
