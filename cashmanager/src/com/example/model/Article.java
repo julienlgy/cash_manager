@@ -21,7 +21,7 @@ public class Article {
     public String stringify() {
         return this.id+"#"+this.nom+"#"+this.description+"#"+this.img+"#"+this.prix.toString();
     }
-    static Article parse(String stringify) {
+    public static Article parse(String stringify) {
         String[] astr = stringify.split("#");
         return new Article(
                 astr[0],

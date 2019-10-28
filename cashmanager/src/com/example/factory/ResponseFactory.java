@@ -1,8 +1,6 @@
 package com.example.factory;
 
-import com.example.model.response.BooleanResponse;
-import com.example.model.response.ReqPasswdResponse;
-import com.example.model.response.Response;
+import com.example.model.response.*;
 
 public class ResponseFactory {
     public static Response create(Response.RESPONSE type, String val) {
@@ -14,7 +12,15 @@ public class ResponseFactory {
             } else {
                 return new BooleanResponse();
             }
+        } else if (type == Response.RESPONSE.PONG) {
+            return new PongResponse();
+        } else if (type == Response.RESPONSE.ARTICLE) {
+            return new ArticleResponse();
         }
         return new BooleanResponse(false);
+    }
+
+    public static Response create(Response.RESPONSE ress) {
+        return create(ress, null);
     }
 }
