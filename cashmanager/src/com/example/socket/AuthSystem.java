@@ -53,9 +53,10 @@ public class AuthSystem implements Runnable {
             BooleanResponse res = (BooleanResponse) ResponseFactory.create(Response.RESPONSE.BOOLEAN, null);
             if (this.serverPassword.equals(((PasswordRequest) req).getPassword())) {
                 res.RESPONSE = true;
-                if (this.socketController.add(new Client(sesssionId, user)))
-                    System.out.println("AUTHSYSTEM | Auth success. Welcome "+sesssionId);
+                if (this.socketController.add(new Client(sesssionId, user))) {
+                    System.out.println("AUTHSYSTEM | Auth success. Welcome " + sesssionId);
                     out.writeBytes(res.getResponse());
+                }
                 else {
                     res.RESPONSE = false;
                     out.writeBytes("User already logged\n");
