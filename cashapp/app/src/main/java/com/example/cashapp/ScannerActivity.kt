@@ -1,13 +1,33 @@
 package com.example.cashapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.TextureView
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import com.example.cashapp.controller.CameraController
+import com.example.cashapp.model.Article
 import com.example.cashapp.ui.scanner.ScannerFragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 
+/**
+ * ScannerActivity # jlegay 2019
+ * last modified : 22/10/2019
+ */
 class ScannerActivity : AppCompatActivity() {
 
+    companion object {
+        val REQUEST_CODE = 1
+    }
+
+    private lateinit var okbutton : FloatingActionButton
+    private lateinit var kobutton : FloatingActionButton
+    private lateinit var article : Article
+
+    private lateinit var camera : CameraController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.scanner_activity)
@@ -18,10 +38,39 @@ class ScannerActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStart() {
+    override fun onStart(){
         super.onStart()
         val view_finder : TextureView = findViewById(R.id.scan_preview)
-        CameraController(this,this, view_finder).start()
+        this.okbutton = findViewById(R.id.ok_button)
+        this.kobutton = findViewById(R.id.ko_button)
+        println("init camera")
+        this.camera = CameraController(this,this, view_finder)
+        println("end init")
+        kobutton.setOnClickListener({
+            Snackbar.make(kobutton, R.string.scan_not_valid, Snackbar.LENGTH_SHORT)
+                .show();
+        })
+        okbutton.setOnClickListener({
+            val resultIntent = Intent()
+            resultIntent.putExtra("article", Article.stringify(article));
+            setResult(0, resultIntent)
+            finish()
+        })
+
+        camera.start()
+        camera.result {
+            val product_id : TextView = findViewById(R.id.product_id)
+            val product_desc : TextView = findViewById(R.id.product_desc)
+            product_id.text = it;
+            article = Article(it!!,"test article","Ceci est un test", "noimg", "10.25".toFloat())
+            product_desc.text = "Produit trouvé mais aucune information disponible..., désoley"
+            setValid(true)
+        }
+    }
+
+    fun setValid(ok : Boolean) {
+        okbutton.visibility = if (ok) View.VISIBLE else View.INVISIBLE
+        kobutton.visibility = if (!ok) View.VISIBLE else View.INVISIBLE
     }
 
 }
