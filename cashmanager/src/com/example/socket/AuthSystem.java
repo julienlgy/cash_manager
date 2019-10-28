@@ -30,7 +30,7 @@ public class AuthSystem implements Runnable {
     public AuthSystem(String serverPasswd, Socket user) {
         this.serverPassword = serverPasswd;
         this.user = user;
-    }
+    } 
 
     public void connect(Socket user) throws Exception {
         System.out.println("AUTHSYSTEM | Populate anonymous token for connection.");
