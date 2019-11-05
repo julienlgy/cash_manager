@@ -54,8 +54,14 @@ public class ArticleGetter {
             JSONObject myResponse = new JSONObject(response.toString());
             JSONObject myProduct = new JSONObject(myResponse.getString("product"));
 
-            if (myProduct.has("image_nutrition_url")) { myImg = myProduct.getString("image_nutrition_url"); }
-            else { myImg = "no image for this article"; }
+            if (myProduct.has("image_url")) { myImg = myProduct.getString("image_url"); }
+            else {
+                if (myProduct.has("image_nutrition_url")) {
+                    myImg = myProduct.getString("image_nutrition_url");
+                } else {
+                    myImg = "no image for this article";
+                }
+            }
 
             myArt = new Article(
                     articleId,
