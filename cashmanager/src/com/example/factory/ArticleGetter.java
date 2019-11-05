@@ -27,7 +27,6 @@ public class ArticleGetter {
     public static Article getArticleById(String articleId) throws IOException {
 
         Article myArt = null;
-        String myImg = null;
 
         String urlToCall = API.replace("{{id}}", articleId);
 
@@ -52,6 +51,7 @@ public class ArticleGetter {
         System.out.println(response.toString());
 
         try {
+            String myImg;
             JSONObject myResponse = new JSONObject(response.toString());
             JSONObject myProduct = new JSONObject(myResponse.getString("product"));
 
