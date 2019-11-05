@@ -24,7 +24,11 @@ public class ArticleGetter {
     //private static String API = "https://apiurl.com/api/{{id}}.json";
     private static String API = "https://fr.openfoodfacts.org/api/v0/product/{{id}}.json";
 
-    public static Article getArticleById(String articleId) throws IOException, JSONException {
+    public static Article getArticleById(String articleId) throws IOException {
+
+        Article myArt = null;
+        String myImg = null;
+
         String urlToCall = API.replace("{{id}}", articleId);
 
         URL obj = new URL(urlToCall);
@@ -36,8 +40,8 @@ public class ArticleGetter {
         System.out.print("Response Code : " + responseCode);
 
         BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        
+            new InputStreamReader(con.getInputStream()));
+
         String inputLine;
         StringBuffer response = new StringBuffer();
         while ((inputLine = in.readLine()) != null) {
@@ -47,18 +51,24 @@ public class ArticleGetter {
 
         System.out.println(response.toString());
 
-        JSONObject myResponse = new JSONObject(response.toString());
-        JSONObject myProduct = new JSONObject(myResponse.getString("product"));
-        /*System.out.println(myProduct.getString("product_name"));
-        System.out.println(myProduct.getString("image_nutrition_url"));*/
+        try {
+            JSONObject myResponse = new JSONObject(response.toString());
+            JSONObject myProduct = new JSONObject(myResponse.getString("product"));
 
-        return new Article(
-                articleId,
-                myProduct.getString("product_name"),
-                "",
-                myProduct.getString("image_nutrition_url"),
-                randomizePrice(articleId)
-        );
+            if (myProduct.has("image_nutrition_url")) { myImg = myProduct.getString("image_nutrition_url"); }
+            else { myImg = "no image for this article"; }
+
+            myArt = new Article(
+                    articleId,
+                    myProduct.getString("product_name"),
+                    "",
+                    myImg,
+                    randomizePrice(articleId)
+            );
+        } catch (JSONException e) {
+            System.out.println(e.getMessage());
+        }
+        return myArt;
     }
 
     public static Float randomizePrice(String articleId) {
