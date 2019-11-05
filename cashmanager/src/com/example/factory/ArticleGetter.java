@@ -27,7 +27,6 @@ public class ArticleGetter {
     public static Article getArticleById(String articleId) throws IOException {
 
         Article myArt = null;
-
         String urlToCall = API.replace("{{id}}", articleId);
 
         URL obj = new URL(urlToCall);
