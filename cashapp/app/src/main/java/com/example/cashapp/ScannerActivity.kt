@@ -73,4 +73,5 @@ class ScannerActivity : AppCompatActivity() {
         kobutton.visibility = if (!ok) View.VISIBLE else View.INVISIBLE
     }
 
+
 }
