@@ -1,8 +1,8 @@
 package com.example.cashapp.controller.server
 
 import com.example.cashapp.model.Server
-import com.example.cashapp.controller.server.ServerInterface
 import com.google.gson.Gson
+import com.google.gson.JsonParser
 import okhttp3.OkHttpClient
 
 
@@ -10,25 +10,54 @@ class ServerController(
     override val okhttp: OkHttpClient = OkHttpClient(),
     val gson : Gson = Gson()
 ) : ServerInterface{
-    override fun connect(address: String, port: String) {
-        this.server = Server("null", Server.buildUrl(address, port))
-        req(ServerInterface.PATH.AUTH, ServerInterface.METHOD.GET, fun(status:Boolean, str : String?) {
-            val json = gson.toJson(str)
-            print(json)
-            if (status) {
-                this.callonServerConnected()
+
+    override var server: Server? = null
+
+    override val serverListener: MutableList<ServerListener> = arrayListOf()
+
+    companion object {
+        private var instance: ServerController? = null
+
+        @Synchronized
+        fun getInstance(): ServerController {
+            if (instance == null) {
+                instance = ServerController()
             }
-        })
+            return instance!!
+        }
+    }
+
+
+    override fun connect(address: String, port: String, password : String) {
+        this.server = Server("null", Server.buildUrl(address, port))
+        val infos : MutableMap<String, String> = mutableMapOf()
+        infos["password"] = password
+        infos["deviceid"] = "notimplyet"
+
+        req(ServerInterface.PATH.AUTH, ServerInterface.METHOD.GET, gson.toJson(infos),
+            fun(status:Boolean, str : String?) {
+                try {
+                    val json = JsonParser().parse(str)
+                    if (status) {
+                        if (json.asJsonObject.get("status").asBoolean) {
+                            this.server!!.token = json.asJsonObject.get("token").asString
+                            this.callonServerConnected()
+                        } else
+                            this.callonServerResponse("Wrong password")
+                    } else {
+                        this.callonServerResponse(json.asJsonObject.get("msg").asString)
+                    }
+                } catch (e: Exception) {
+                    this.callonServerResponse("Can't ear what server say.")
+                }
+            }
+        )
     }
 
     override fun disconnect() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (this.server is Server) {
+            this.server = null;
+        }
+        this.callonServerDisonnected()
     }
-
-    override var server: Server
-        get() = server
-        set(value) {}
-
-    override val serverListener: MutableList<ServerListener>
-        get() = serverListener
 }

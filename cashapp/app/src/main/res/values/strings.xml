@@ -28,6 +28,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="warning">Warning</string>
+    <string name="version">v1</string>
     <!-- HOME FRAGMENT STRINGS -->
     <string name="home_empty_list">Your list is empty</string>
     <string name="home_empty_list_button">Start scanning</string>
@@ -41,4 +42,10 @@
     <string name="moins">Less</string>
     <string name="plus">More</string>
     <string name="delete">Delete</string>
+    <!-- LOGIN ACTIVITY -->
+    <string name="logtitle">To continue, you must enter a valid CASHMANAGER v1 SERVER</string>
+    <string name="address">Address</string>
+    <string name="port">Port</string>
+    <string name="password">Server password</string>
+    <string name="connect">Connect</string>
 </resources>

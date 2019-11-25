@@ -1,19 +1,23 @@
 package com.example.cashapp.controller.server
 
 import com.example.cashapp.model.Server
-import kotlinx.coroutines.runBlocking
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
+import kotlinx.coroutines.*
 import okhttp3.*
 import java.io.IOException
+import java.lang.IllegalArgumentException
+import java.net.ConnectException
 
 interface ServerInterface {
 
-    var server: Server
+    var server: Server?
+    val serverListener : MutableList<ServerListener>
     val okhttp : OkHttpClient
 
     /**
      * Event listener
      */
-    val serverListener : MutableList<ServerListener>
     fun addListener(tclass : ServerListener) = serverListener.add(tclass)
     fun remListener(tclass : ServerListener) = serverListener.remove(tclass)
     fun callonServerResponse(args : String) {
@@ -35,15 +39,15 @@ interface ServerInterface {
     /**
      * Connect/Disconnect methods
      */
-    fun connect(address: String, port: String)
+    fun connect(address: String, port: String, password : String)
     fun disconnect()
 
     /**
      * Request builder + CONSTANTS
      */
     enum class PATH(val url : String) {
-        AUTH ( "/auth/" ),
-        ARTICLE ( "/article/" )
+        AUTH ( "auth/" ),
+        ARTICLE ( "article/" )
     }
 
     enum class METHOD(val method : String) {
@@ -51,24 +55,43 @@ interface ServerInterface {
         POST ("POST")
     }
 
-    fun req(path : PATH, method : METHOD, callback : (Boolean, String?) -> Unit?) {
-        val str = server.baseurl + path.url
-        run (str, callback)
+    fun req(path : PATH, method : METHOD, args : String?, callback : (Boolean, String?) -> Unit?) {
+        val str = server!!.baseurl + path.url
+        run (str, method, args, callback)
     }
 
-    private fun run(url : String, callback : (Boolean, String?) -> Unit?) {
-        val request = Request.Builder()
-            .url(url)
-            .build()
+    fun isConnected() : Boolean = (this.server is Server && !this.server!!.token.equals("null"))
 
-        okhttp.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                callback(false, null)
+    private fun run(url : String, method: METHOD, args : String?, callback : (Boolean, String?) -> Unit?) = runBlocking {
+        try {
+            var request : Request = Request.Builder()
+                .url(url)
+                .build()
+            if (method === METHOD.POST) {
+                if (args != null) {
+                    val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), args)
+                    request = Request.Builder()
+                        .url(url)
+                        .post(body)
+                        .build()
+                }
             }
-            override fun onResponse(call: Call, response: Response) {
-                callback(true, response.body()?.string())
+            GlobalScope.launch(Dispatchers.IO) {
+                try {
+                    val response: Response = okhttp.newCall(request).execute()
+                    withContext(Dispatchers.Main) {
+                        callback(response.isSuccessful, response.body()?.string())
+                    }
+                } catch (e : Exception) {
+                    println("Connection error : " + url)
+                    withContext(Dispatchers.Main) {
+                        callback(false, "{\"status\":false,\"msg\":\"Can't connect to server\"}")
+                    }
+                }
             }
-        })
+        } catch (e : Exception) {
+            println("Illegal url " + url)
+        }
     }
 
 

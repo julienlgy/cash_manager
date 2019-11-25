@@ -13,7 +13,7 @@ import java.util.*
 class Server(var token : String, var baseurl : String) {
     companion object {
         const val api_version = "v1"
-        const val BASE_URL = "/api/"+api_version+"/"
+        const val BASE_URL = "/api/"
         fun buildUrl(adress: String, port : String) : String {
             return "https://"+adress+":"+port+BASE_URL
         }

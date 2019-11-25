@@ -6,4 +6,87 @@
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
 
+    <TextView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="cursive"
+        android:text="@string/appname"
+        android:textColor="@color/colorPrimary"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="@string/logtitle"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/port"
+        tools:text="@string/password" />
+
+    <EditText
+        android:id="@+id/address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        tools:text="@string/address" />
+
+    <EditText
+        android:id="@+id/port"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/address"
+        tools:text="@string/port" />
+
+    <Button
+        android:id="@+id/connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/connect"
+        app:layout_constraintEnd_toEndOf="@+id/password"
+        app:layout_constraintStart_toStartOf="@+id/password"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
+
+    <TextView
+        android:id="@+id/loginerror"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:shadowColor="#8BC34A"
+        android:text="error qzdoqzdoijqzd"
+        android:textColor="#FC2626"
+        android:textColorHighlight="#00F10000"
+        android:textColorHint="#00FC0101"
+        android:textColorLink="#00FF0000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/connect" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

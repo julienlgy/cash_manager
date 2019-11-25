@@ -20,17 +20,21 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.cashapp.controller.CartController
 import com.example.cashapp.controller.CartUpdated
 import android.view.Menu
+import android.widget.ImageButton
+import com.example.cashapp.controller.server.ServerController
+import com.example.cashapp.controller.server.ServerListener
 import java.math.BigInteger
 import java.util.*
 import kotlin.experimental.and
 
-class CashActivity : AppCompatActivity(), CartUpdated {
+class CashActivity : AppCompatActivity(), CartUpdated, ServerListener {
 
     private lateinit var bn_first : MenuItem
     private lateinit var bn_scdn: MenuItem
     private lateinit var bn_last: MenuItem
     private lateinit var navView : BottomNavigationView
     private lateinit var navController : NavController
+    private lateinit var statusconnection : TextView
 
     /* NFC READER */
     private var mTextView: TextView? = null
@@ -41,8 +45,25 @@ class CashActivity : AppCompatActivity(), CartUpdated {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cash)
 
+        if (!ServerController.getInstance().isConnected()) {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
 
-        /* NFC READER */
+        /** Connection status **/
+        statusconnection = findViewById(R.id.connectionstatus)
+        ServerController.getInstance().addListener(this)
+        statusconnection.text = if (ServerController.getInstance().isConnected()) "Connected" else "Not Connected"
+        (findViewById(R.id.serverstatus) as ImageButton).setOnClickListener{
+            if (!ServerController.getInstance().isConnected())
+                startActivity(Intent(this, LoginActivity::class.java))
+            else {
+                //TODO : Disconnection. with popup are you sure ?
+            }
+        }
+        /** ***************** **/
+
+        /** NFC READER **/
         mTextView = findViewById(R.id.textView_explanation) as TextView
 
         mTextView!!.text = "Price to pay : 30 €"
@@ -277,4 +298,16 @@ class CashActivity : AppCompatActivity(), CartUpdated {
         return out
     }
     /* ***** */
+
+    override fun onServerConnected() {
+        this.statusconnection.text = "Connected"
+    }
+
+    override fun onServerDisconnect() {
+        this.statusconnection.text = "Not connected"
+    }
+
+    override fun onServerResponse(args: String) {
+        null
+    }
 }
