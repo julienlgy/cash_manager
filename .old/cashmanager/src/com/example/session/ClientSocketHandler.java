@@ -11,6 +11,7 @@ import com.example.model.response.ArticleResponse;
 import com.example.model.response.BooleanResponse;
 import com.example.model.response.DefaultResponse;
 import com.example.model.response.Response;
+import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -46,11 +47,13 @@ public class ClientSocketHandler implements Runnable {
                 in.close();
                 out.close();
                 break;
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
     }
 
-    Response commandHandler(CommandRequest req) {
+    Response commandHandler(CommandRequest req) throws IOException, JSONException {
         BooleanResponse res = new BooleanResponse(false);
         switch(req.getCommand()) {
             case "ADD_ART":
