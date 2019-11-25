@@ -54,12 +54,6 @@ class CashActivity : AppCompatActivity(), CartUpdated {
         bn_last = navView.menu.get(2)
 
         navController = findNavController(R.id.nav_host_fragment)
-        /*val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_payment
-            )
-        )*/
-        //setupActionBarWithNavControllnav_viewer(navController, appBarConfiguration)
 
         navView.setupWithNavController(navController)
         getCart().addListener(this)
@@ -176,13 +170,7 @@ class CashActivity : AppCompatActivity(), CartUpdated {
         sb.append("ID (dec): ").append(getDec(id)).append("\n")
         //sb.append("ID (reversed): ").append(getReversed(id)).append("\n")
         sb.append("Payment Done \n")
-
-        //val prefix = "android.nfc.tech."
-       /* sb.append("Technologies: ")
-        for (tech in tag.techList) {
-            sb.append(tech.substring(prefix.length))
-            sb.append(", ")
-        }*/
+        
         sb.delete(sb.length - 2, sb.length)
         for (tech in tag.techList) {
             if (tech == MifareClassic::class.java.getName()) {
