@@ -28,13 +28,13 @@ public class ArticleController {
         return articleRepository.save(article);
     }
 
-    @GetMapping("/articles/{id]")
+    @GetMapping("/articles/{id}")
     public Article updateArticle(@PathVariable(value="id") Long articleId){
         return articleRepository.findById(articleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Article", "id", articleId));
     }
 
-    @PutMapping("/aricles/{id]")
+    @PutMapping("/articles/{id}")
     public Article updateArticle(@PathVariable(value="id") Long articleId, @Valid @RequestBody Article articleDetails){
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Article","Id", articleId));

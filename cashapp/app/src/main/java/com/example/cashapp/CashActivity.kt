@@ -41,10 +41,14 @@ class CashActivity : AppCompatActivity(), CartUpdated, ServerListener {
     private val techList = arrayOf(arrayOf<String>(NfcA::class.java.getName(), NfcB::class.java.getName(), NfcF::class.java.getName(), NfcV::class.java.getName(), IsoDep::class.java.getName(), MifareClassic::class.java.getName(), MifareUltralight::class.java.getName(), Ndef::class.java.getName()))
     /* ***** */
 
+    /* NFC READER */
+    private var mTextView: TextView? = null
+    private val techList = arrayOf(arrayOf<String>(NfcA::class.java.getName(), NfcB::class.java.getName(), NfcF::class.java.getName(), NfcV::class.java.getName(), IsoDep::class.java.getName(), MifareClassic::class.java.getName(), MifareUltralight::class.java.getName(), Ndef::class.java.getName()))
+    /* ***** */
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cash)
-
         if (!ServerController.getInstance().isConnected()) {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
