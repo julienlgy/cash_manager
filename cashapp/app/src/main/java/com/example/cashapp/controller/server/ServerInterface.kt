@@ -1,38 +1,98 @@
 package com.example.cashapp.controller.server
 
 import com.example.cashapp.model.Server
-import kotlinx.coroutines.runBlocking
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
+import kotlinx.coroutines.*
+import okhttp3.*
+import java.io.IOException
+import java.lang.IllegalArgumentException
+import java.net.ConnectException
 
 interface ServerInterface {
-    var server : Server
-    var connected : Boolean
-    val listeners :MutableList<ServerListener>
-    /**
-     * Connection handler methods
-     */
-    fun connect(address : String, port : Int, password : String?)
-    fun isConnected() : Boolean = connected
-    fun getConnection() : Server? = server
-    //fun launchPingSequence()
+
+    var server: Server?
+    val serverListener : MutableList<ServerListener>
+    val okhttp : OkHttpClient
 
     /**
-     * createRequest
-     * @param command : The command need to be formated
-     * @param args : Argument or not, string
-     * @return formatted request.
+     * Event listener
      */
-    fun createRequest(command : String, args : String?) : String
-    // Send with callback
-    fun send(request : String, callback : (String?) -> Unit)
-    // Send without callback, don't care about the return statement.
-    fun send(request : String)
+    fun addListener(tclass : ServerListener) = serverListener.add(tclass)
+    fun remListener(tclass : ServerListener) = serverListener.remove(tclass)
+    fun callonServerResponse(args : String) {
+        this.serverListener.forEach {
+            it.onServerResponse(args)
+        }
+    }
+    fun callonServerConnected() {
+        this.serverListener.forEach {
+            it.onServerConnected()
+        }
+    }
+    fun callonServerDisonnected() {
+        this.serverListener.forEach {
+            it.onServerDisconnect()
+        }
+    }
 
     /**
-     * Listeners basic methods
+     * Connect/Disconnect methods
      */
-    fun listenTo(listener : ServerListener) = listeners.add(listener)
-    fun unListenTo(listener : ServerListener) = listeners.remove(listener)
-    fun notifyConnected() { for(listener in listeners) listener.onServerConnected() }
-    fun notifyDisconnected() {for(listener in listeners) listener.onServerDisconnect()}
-    fun notifyResponse() {for(listener in listeners) listener.onServerResponse()}
+    fun connect(address: String, port: String, password : String)
+    fun disconnect()
+
+    /**
+     * Request builder + CONSTANTS
+     */
+    enum class PATH(val url : String) {
+        AUTH ( "auth/" ),
+        ARTICLE ( "article/" )
+    }
+
+    enum class METHOD(val method : String) {
+        GET ("GET"),
+        POST ("POST")
+    }
+
+    fun req(path : PATH, method : METHOD, args : String?, callback : (Boolean, String?) -> Unit?) {
+        val str = server!!.baseurl + path.url
+        run (str, method, args, callback)
+    }
+
+    fun isConnected() : Boolean = (this.server is Server && !this.server!!.token.equals("null"))
+
+    private fun run(url : String, method: METHOD, args : String?, callback : (Boolean, String?) -> Unit?) = runBlocking {
+        try {
+            var request : Request = Request.Builder()
+                .url(url)
+                .build()
+            if (method === METHOD.POST) {
+                if (args != null) {
+                    val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), args)
+                    request = Request.Builder()
+                        .url(url)
+                        .post(body)
+                        .build()
+                }
+            }
+            GlobalScope.launch(Dispatchers.IO) {
+                try {
+                    val response: Response = okhttp.newCall(request).execute()
+                    withContext(Dispatchers.Main) {
+                        callback(response.isSuccessful, response.body()?.string())
+                    }
+                } catch (e : Exception) {
+                    println("Connection error : " + url)
+                    withContext(Dispatchers.Main) {
+                        callback(false, "{\"status\":false,\"msg\":\"Can't connect to server\"}")
+                    }
+                }
+            }
+        } catch (e : Exception) {
+            println("Illegal url " + url)
+        }
+    }
+
+
 }

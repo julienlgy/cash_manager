@@ -10,11 +10,12 @@ import java.util.*
  * jlegay 2019
  * #epitech
  */
-class Server(val sessionId : String, val socket : Socket, var password : String? = null) {
+class Server(var token : String, var baseurl : String) {
     companion object {
-        fun generateNewSessionID() : String {
-            val date = Date()
-            return Random(Timestamp(date.time).time).nextInt().toString()
+        const val api_version = "v1"
+        const val BASE_URL = "/api/"
+        fun buildUrl(adress: String, port : String) : String {
+            return "https://"+adress+":"+port+BASE_URL
         }
     }
 }

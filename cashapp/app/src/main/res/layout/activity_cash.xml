@@ -63,7 +63,7 @@
         app:navGraph="@navigation/mobile_navigation" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/serverstatus"
         android:layout_width="43dp"
         android:layout_height="43dp"
         android:layout_marginStart="200dp"
@@ -72,6 +72,12 @@
         app:layout_constraintStart_toEndOf="@+id/logo"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_info_details" />
-
+    <TextView
+        android:id="@+id/connectionstatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toStartOf="@+id/serverstatus"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

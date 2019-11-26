@@ -1,93 +1,63 @@
 package com.example.cashapp.controller.server
 
-import com.example.cashapp.controller.CartController
 import com.example.cashapp.model.Server
-import kotlinx.coroutines.*
-import java.io.BufferedReader
-import java.io.DataOutputStream
-import java.io.InputStreamReader
-import java.net.Socket
+import com.google.gson.Gson
+import com.google.gson.JsonParser
+import okhttp3.OkHttpClient
 
 
-class ServerController : ServerInterface {
+class ServerController(
+    override val okhttp: OkHttpClient = OkHttpClient(),
+    val gson : Gson = Gson()
+) : ServerInterface{
+
+    override var server: Server? = null
+
+    override val serverListener: MutableList<ServerListener> = arrayListOf()
+
     companion object {
-
-        private var instance: CartController? = null
+        private var instance: ServerController? = null
 
         @Synchronized
-        fun getInstance(): CartController {
+        fun getInstance(): ServerController {
             if (instance == null) {
-                instance = CartController()
+                instance = ServerController()
             }
             return instance!!
         }
-
     }
 
-    override var server: Server
-        get() = server
-        set(value) { server = server}
 
-    override var connected: Boolean
-        get() = connected
-        set(value) { connected = value}
-    override val listeners: MutableList<ServerListener>
-        get() = listeners
+    override fun connect(address: String, port: String, password : String) {
+        this.server = Server("null", Server.buildUrl(address, port))
+        val infos : MutableMap<String, String> = mutableMapOf()
+        infos["password"] = password
+        infos["deviceid"] = "notimplyet"
 
-    override fun send(request: String) {
-        if (!isConnected()) return
-        val stream = DataOutputStream(server.socket.getOutputStream())
-        stream.writeBytes(request + 'n')
-    }
-
-    override fun send(request: String, callback: (String?) -> Unit) = runBlocking {
-        GlobalScope.launch(Dispatchers.IO) {
-            val stream = DataOutputStream(server.socket.getOutputStream())
-            val res = BufferedReader(InputStreamReader(server.socket.getInputStream()))
-            stream.writeBytes(request + 'n')
-            val response = res.readLine()
-            withContext(Dispatchers.Main) {
-                callback(response)
-            }
-        }
-        Unit
-    }
-
-    override fun connect(address: String, port: Int, password: String?) {
-        this.server = Server(Server.generateNewSessionID(), Socket(address, port), password)
-        send("HELLO FROM ${server.sessionId}") {
-            if (it is String && it.equals("REQUEST PASSWORD") && password is String) {
-                send("PASSWORD ${password}") {
-                    if (it.equals("OK")) {
-                        notifyConnected()
-                    } else if (it.equals("KO")) {
-                        notifyDisconnected()
+        req(ServerInterface.PATH.AUTH, ServerInterface.METHOD.GET, gson.toJson(infos),
+            fun(status:Boolean, str : String?) {
+                try {
+                    val json = JsonParser().parse(str)
+                    if (status) {
+                        if (json.asJsonObject.get("status").asBoolean) {
+                            this.server!!.token = json.asJsonObject.get("token").asString
+                            this.callonServerConnected()
+                        } else
+                            this.callonServerResponse("Wrong password")
+                    } else {
+                        this.callonServerResponse(json.asJsonObject.get("msg").asString)
                     }
+                } catch (e: Exception) {
+                    this.callonServerResponse("Can't ear what server say.")
                 }
             }
+        )
+    }
+
+    override fun disconnect() {
+        if (this.server is Server) {
+            this.server = null;
         }
+        this.callonServerDisonnected()
     }
-
-    override fun createRequest(command: String, args: String?): String = "COMMAND $command" + if (args is String) " WITH $args" else ""
-
-    /**
-     * Listeners management
-
-
-    /*val sentence: String
-    val modifiedSentence: String
-    val inFromUser = BufferedReader(InputStreamReader(System.`in`))
-    val clientSocket = Socket("localhost", 6789)
-    val outToServer = DataOutputStream(clientSocket.getOutputStream())
-    val inFromServer = BufferedReader(InputStreamReader(clientSocket.getInputStream()))
-    sentence = inFromUser.readLine()
-    outToServer.writeBytes(sentence + 'n')
-    modifiedSentence = inFromServer.readLine()
-    println("FROM SERVER: $modifiedSentence")
-    clientSocket.close()*/
-
-    fun addListener(toAdd : CartUpdated) {
-        updateListener.add(toAdd)
-    }
-    private val updateListener : MutableList<CartUpdated>*/
 }

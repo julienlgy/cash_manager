@@ -1,7 +1,7 @@
 package com.example.cashapp.controller.server
 
 interface ServerListener {
-    fun onServerConnected() = null
-    fun onServerDisconnect() = null
-    fun onServerResponse() = null
+    fun onServerConnected()
+    fun onServerDisconnect()
+    fun onServerResponse(args : String)
 }
