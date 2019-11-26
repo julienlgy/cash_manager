@@ -170,7 +170,7 @@ class CashActivity : AppCompatActivity(), CartUpdated {
         sb.append("ID (dec): ").append(getDec(id)).append("\n")
         //sb.append("ID (reversed): ").append(getReversed(id)).append("\n")
         sb.append("Payment Done \n")
-        
+
         sb.delete(sb.length - 2, sb.length)
         for (tech in tag.techList) {
             if (tech == MifareClassic::class.java.getName()) {
