@@ -34,13 +34,17 @@ class LoginActivity : AppCompatActivity(), ServerListener {
     }
 
     override fun onServerConnected() {
-        ServerController.getInstance().remListener(this)
-        finish()
+        this.runOnUiThread{
+            ServerController.getInstance().remListener(this)
+            finish()
+        }
     }
 
     override fun onServerResponse(args: String) {
-        if (errormsg is TextView) {
-            errormsg.text = args
+        this.runOnUiThread{
+            if (errormsg is TextView) {
+                errormsg.text = args
+            }
         }
     }
 

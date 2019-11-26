@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import com.example.cashapp.controller.CameraController
+import com.example.cashapp.controller.server.ServerController
 import com.example.cashapp.model.Article
 import com.example.cashapp.ui.scanner.ScannerFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -59,12 +60,17 @@ class ScannerActivity : AppCompatActivity() {
 
         camera.start()
         camera.result {
-            val product_id : TextView = findViewById(R.id.product_id)
-            val product_desc : TextView = findViewById(R.id.product_desc)
-            product_id.text = it;
-            article = Article(it!!,"test article","Ceci est un test", "noimg", "10.25".toFloat())
-            product_desc.text = "Produit trouvé mais aucune information disponible..., désoley"
-            setValid(true)
+            if (it is String) {
+                val product_id : TextView = findViewById(R.id.product_id)
+                val product_desc : TextView = findViewById(R.id.product_desc)
+                product_id.text = it;
+                ServerController.getInstance().getArticle(it, fun(article: Article) {
+                    runOnUiThread{
+                        product_desc.text = article.description
+                    }
+                })
+                setValid(true)
+            }
         }
     }
 

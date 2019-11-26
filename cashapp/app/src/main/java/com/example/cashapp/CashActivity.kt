@@ -41,11 +41,6 @@ class CashActivity : AppCompatActivity(), CartUpdated, ServerListener {
     private val techList = arrayOf(arrayOf<String>(NfcA::class.java.getName(), NfcB::class.java.getName(), NfcF::class.java.getName(), NfcV::class.java.getName(), IsoDep::class.java.getName(), MifareClassic::class.java.getName(), MifareUltralight::class.java.getName(), Ndef::class.java.getName()))
     /* ***** */
 
-    /* NFC READER */
-    private var mTextView: TextView? = null
-    private val techList = arrayOf(arrayOf<String>(NfcA::class.java.getName(), NfcB::class.java.getName(), NfcF::class.java.getName(), NfcV::class.java.getName(), IsoDep::class.java.getName(), MifareClassic::class.java.getName(), MifareUltralight::class.java.getName(), Ndef::class.java.getName()))
-    /* ***** */
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cash)
@@ -304,11 +299,15 @@ class CashActivity : AppCompatActivity(), CartUpdated, ServerListener {
     /* ***** */
 
     override fun onServerConnected() {
-        this.statusconnection.text = "Connected"
+        runOnUiThread {
+            this.statusconnection.text = "Connected"
+        }
     }
 
     override fun onServerDisconnect() {
-        this.statusconnection.text = "Not connected"
+        runOnUiThread {
+            this.statusconnection.text = "Not connected"
+        }
     }
 
     override fun onServerResponse(args: String) {

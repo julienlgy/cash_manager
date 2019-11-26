@@ -15,7 +15,7 @@ class Server(var token : String, var baseurl : String) {
         const val api_version = "v1"
         const val BASE_URL = "/api/"
         fun buildUrl(adress: String, port : String) : String {
-            return "https://"+adress+":"+port+BASE_URL
+            return "http://"+adress+":"+port+BASE_URL
         }
     }
 }
