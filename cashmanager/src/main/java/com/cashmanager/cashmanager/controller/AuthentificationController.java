@@ -20,7 +20,7 @@ import java.util.Base64;
 import java.util.Properties;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class AuthentificationController {
 
     @PostMapping("/auth")

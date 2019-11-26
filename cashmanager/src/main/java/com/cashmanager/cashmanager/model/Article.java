@@ -25,7 +25,7 @@ public class Article{
     private String image;
 
     @Column(name = "PRIX", insertable=true, updatable=true, nullable=false)
-    private Long prix;
+    private float prix;
 
     @ManyToMany(mappedBy = "articles")
     Set<Panier> paniers;
@@ -35,7 +35,7 @@ public class Article{
         super();
     }
 
-    public Article(String article_name, Long prix) {
+    public Article(String article_name, float prix) {
         this.article_name = article_name;
         this.prix = prix;
     }
@@ -49,7 +49,7 @@ public class Article{
         this.article_name = article_name;
     }
 
-    public Article(Long id, String article_name, String description, String image, Long prix) {
+    public Article(Long id, String article_name, String description, String image, float prix) {
         this.id= id;
         this.article_name=article_name;
         this.description = description;
@@ -92,12 +92,12 @@ public class Article{
         this.image = image;
     }
 
-    public Long getPrix() {
+    public float getPrix() {
         return prix;
     }
 
     @XmlElement
-    public void setPrix(Long prix) {
+    public void setPrix(float prix) {
         this.prix = prix;
     }
 
