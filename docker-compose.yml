@@ -1,0 +1,34 @@
+#
+# Docker compose file
+# EPITECH 2019 - CashManager
+# Julien LEGAY x Jean BOSC
+#
+version : '3'
+services:
+    download_apk:
+        container_name: build_and_apache
+        build:
+            context: ./cashapp
+        ports:
+            - "8081:80"
+    back:
+        container_name: cashmanager_back
+        build:
+            context: ./cashmanager
+        ports:
+            - "8080:8080"
+        depends_on:
+            - db
+    db:
+        container_name: cashmanager_db
+        image: postgres:9.6
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            PGDATA: /var/lib/postgresql/data/pgdata
+        restart: always
+        volumes:
+            - "/var/run/postgres/postgres.sock:/var/run/postgres/postgres.sock"
+            - "dbdata:/var/lib/postgresql/data"
+volumes:
+    dbdata:
