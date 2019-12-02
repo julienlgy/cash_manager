@@ -1,2 +1,2 @@
 language: java
-script: travis_start.sh
+script: ./travis_start.sh
