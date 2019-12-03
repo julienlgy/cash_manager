@@ -3,7 +3,7 @@ package com.cashmanager.cashmanager.model;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "PANIER")
@@ -20,7 +20,7 @@ public class Panier{
 
     @ManyToMany(cascade = CascadeType.DETACH)
     @JoinTable(name = "ARTICLE_IN_PANIER", joinColumns = @JoinColumn(name = "PANIER_ID"), inverseJoinColumns = @JoinColumn(name = "ARTICLE_ID"))
-    private Set<Article> articles;
+    private List<Article> articles = new ArrayList<Article>();
 
    /* @ManyToOne
     @JoinColumn
@@ -58,6 +58,29 @@ public class Panier{
     @XmlElement
     public void setUser(User user){ this.user = user; } */
 
+    public boolean setArticle(Article article) {
+        if (this.articles.add(article)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean deleteArticle(Article article) {
+        System.out.println(" --> " + this.articles + " ------> " + this.articles.contains(article));
+        this.articles.remove(article);
+
+        return true;
+    }
+
+    public void logArticles(){
+        Iterator anIterator=this.articles.iterator();
+        while (anIterator.hasNext())
+        {
+            Object elem=anIterator.next();
+            System.out.println(elem);
+        }
+    }
 
     @Override
     public String toString() {

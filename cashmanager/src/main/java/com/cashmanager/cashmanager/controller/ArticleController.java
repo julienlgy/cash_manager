@@ -92,12 +92,6 @@ public class ArticleController {
             System.out.println(e.getMessage());
         }
 
-        /* **** */
-
-        /*
-        * VERIFIER SI article PRESENT DANS BDD
-        *   AJOUTER SINON
-        *  */
         return myArtRes;
         /*return articleRepository.findById(articleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Article", "id", articleId));*/
@@ -144,7 +138,20 @@ public class ArticleController {
         return serialized;
     }
 
-    public class ArticleResponse {
+    public static Article deserializedArticle(String serialized) {
+        String[] expected = serialized.split("\"");
+        String[] myData = expected[3].split("#");
+
+        Article article = new Article(
+                Long.parseLong(myData[0]),
+                myData[1],
+                myData[2],
+                myData[3],
+                Float.parseFloat(myData[4]));
+
+        return article;
+    }
+    public static class ArticleResponse {
         private boolean status;
         private String article;
 
