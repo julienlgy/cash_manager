@@ -38,7 +38,7 @@ class PaymentFragment : Fragment() {
         val button : Button = root.findViewById(R.id.cancel)
         Snackbar.make(button, R.string.payment_snackbar, Snackbar.LENGTH_LONG)
             .show();
-        button.setOnClickListener({
+        button.setOnClickListener{
             MaterialAlertDialogBuilder(context)
                 .setTitle(R.string.warning)
                 .setMessage(R.string.cancel_confirm)
@@ -47,7 +47,7 @@ class PaymentFragment : Fragment() {
                     getCart().flush()
                 })
                 .show();
-        })
+        }
     }
 
     fun getCart() : CartController {
