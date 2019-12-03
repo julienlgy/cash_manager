@@ -2,7 +2,9 @@ package com.example.session;
 
 import com.example.factory.ArticleGetter;
 import com.example.model.Article;
+import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class CartSyncHandler {
@@ -21,7 +23,7 @@ public class CartSyncHandler {
         return articleList.remove(a);
     }
 
-    public Article get_art(String articleId) {
+    public Article get_art(String articleId) throws IOException, JSONException {
         return ArticleGetter.getArticleById(articleId);
     }
 }
